@@ -4,12 +4,13 @@ const app = express();
 var morgan = require("morgan");
 const { userRouter, blogRouter } = require("./routes");
 const { generateFakeData } = require("./../faker2");
-
-const MONGO_URI =
-    "mongodb+srv://admin:Kona1234@mongodbtutorial.sl38y.mongodb.net/BlogService?retryWrites=true&w=majority";
-
 const server = async () => {
     try {
+        const { MONGO_URI, PORT } = process.env;
+
+        if (!MONGO_URI) throw new Error("MONGO_URI is required");
+        if (!PORT) throw new Error("PORT is required");
+
         //await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
         await mongoose.connect(MONGO_URI);
         // mongoose.set("debug", true);
@@ -23,7 +24,7 @@ const server = async () => {
         app.use("/blog", blogRouter);
 
         app.listen(3000, async () => {
-            console.log("Server started at port 3000");
+            console.log(`Server started at port ${PORT}`);
             // console.time("insert time: ");
             // await generateFakeData(10, 2, 10);
             // console.timeEnd("insert time: ");
